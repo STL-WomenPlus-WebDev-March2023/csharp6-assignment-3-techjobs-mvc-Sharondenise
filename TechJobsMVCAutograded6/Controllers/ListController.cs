@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using TechJobsMVCAutograded6.Data;
 using TechJobsMVCAutograded6.Models;
 
@@ -29,6 +30,7 @@ public class ListController : Controller
             {"coreCompetency", JobData.GetAllCoreCompetencies()}
         };
 
+
     public IActionResult Index()
     {
         ViewBag.columns = ColumnChoices;
@@ -44,7 +46,26 @@ public class ListController : Controller
     // TODO #2 - Complete the Jobs action method
     public IActionResult Jobs(string column, string value)
     {
-        return View();
+        List<Job> jobs = new List<Job>();
+        if (value == "View All")
+        {
+            jobs = JobData.FindAll();
+        } else
+        {
+            jobs = JobData.FindByColumnAndValue(column, value);
+        }
+
+
+        ViewBag.columns = ColumnChoices;
+        ViewBag.tableChoices = TableChoices;
+        ViewBag.employers = JobData.GetAllEmployers();
+        ViewBag.locations = JobData.GetAllLocations();
+        ViewBag.positionTypes = JobData.GetAllPositionTypes();
+        ViewBag.skills = JobData.GetAllCoreCompetencies();
+
+
+        ViewBag.jobs = jobs;
+        return View("Jobs");
     }
 }
 
