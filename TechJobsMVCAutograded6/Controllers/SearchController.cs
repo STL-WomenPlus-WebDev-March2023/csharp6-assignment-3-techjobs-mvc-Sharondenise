@@ -15,6 +15,7 @@ public class SearchController : Controller
     public IActionResult Index()
     {
         ViewBag.columns = ListController.ColumnChoices;
+        ViewBag.jobs = new List<Job>();
         return View();
     }
     // POST: 
@@ -22,19 +23,16 @@ public class SearchController : Controller
     {
         List<Job> jobs = new List<Job>();
 
-        if (searchType == "all" || searchTerm == "")
+        if (searchType == "all" && searchTerm == "")
         {
             jobs = JobData.FindAll();
         } else {
             jobs = JobData.FindByColumnAndValue(searchType, searchTerm);
         }
 
-        ViewBag.employers = JobData.GetAllEmployers();
-        ViewBag.locations = JobData.GetAllLocations();
-        ViewBag.positionTypes = JobData.GetAllPositionTypes();
-        ViewBag.skills = JobData.GetAllCoreCompetencies();
 
         ViewBag.columns = ListController.ColumnChoices;
+        ViewBag.jobs = jobs;
         return View("Index");
     }
     // TODO #3 - Create an action method to process a search request and render the updated search views.
